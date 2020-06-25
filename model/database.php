@@ -23,3 +23,23 @@ function init_db() {
 
   return $db;
 }
+/*************************************
+* ----- INIT DATABASE SQLI CONNECTION -----
+*************************************/
+
+function init_sqli() {
+  try {
+	$serveurBD = "localhost";
+    $nomUtilisateur = "root";
+    $motDePasse = "root";
+    $baseDeDonnees = "codflix";
+	$conn = mysqli_connect($serveurBD, $nomUtilisateur, $motDePasse, $baseDeDonnees);
+	$conn->set_charset("utf8");
+  } catch(Exception $e) {
+
+    die( 'Erreur : '.$e->getMessage() );
+
+  }
+
+  return $conn;
+}

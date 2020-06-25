@@ -89,18 +89,42 @@ class Media {
   ***************************/
 
   public static function filterMedias( $title ) {
-
     // Open database connection
     $db   = init_db();
+	if ($title <> ""){
+		$req= 	"SELECT * FROM media WHERE title like('%".$title."%') ORDER BY release_date DESC";
+	}
+	else{
+		$req= 	"SELECT * FROM media ORDER BY release_date DESC" ;
+	}
+    $req  = $db->prepare( $req );
+	$req->execute( );
+    // Close database connection
+    $db   = null;
 
-    $req  = $db->prepare( "SELECT * FROM media  ORDER BY release_date DESC" );
-    $req->execute( array( '%' . $title . '%' ));
+    return $req->fetchAll();
+  }
 
+  /***************************
+  * -------- GET LIST SERIES--------
+  ***************************/
+
+  public static function filterSeries( $title ) {
+    // Open database connection
+    $db   = init_db();
+	if ($title <> ""){
+		$req= 	"SELECT * FROM media WHERE title like('%".$title."%') AND type = 'serie' ORDER BY release_date DESC";
+	}
+	else{
+		$req= 	"SELECT * FROM media WHERE type = 'serie' ORDER BY release_date DESC" ;
+	}
+    $req  = $db->prepare( $req );
+	$req->execute( );
     // Close databse connection
     $db   = null;
 
     return $req->fetchAll();
-
   }
+
 
 }

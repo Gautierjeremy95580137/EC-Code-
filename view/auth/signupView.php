@@ -8,7 +8,8 @@
           <h2><span>Cod</span>'Flix</h2>
           <h3>Inscription</h3>
 
-          <form method="post" action="index.php?action=signup" class="custom-form">
+	  <!--    change form action from signup to inscription ">   -->
+		   <form method="post" action="index.php?action=inscription" class="custom-form">
 
             <div class="form-group">
               <label for="email">Adresse email</label>

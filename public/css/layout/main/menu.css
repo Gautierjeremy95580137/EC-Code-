@@ -80,7 +80,7 @@
     height: 100%;
     z-index: 9;
   }
-  #sidebar.open {margin-left: 0 !important;}
+  #sidebar.open {margin-left: 100 !important;}
 
 }
 

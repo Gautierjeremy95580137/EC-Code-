@@ -36,10 +36,9 @@ class User {
   }
 
   public function setPassword( $password, $password_confirm = false ) {
-
     if( $password_confirm && $password != $password_confirm ):
       throw new Exception( 'Vos mots de passes sont différents' );
-    endif;
+	endif;
 
     $this->password = $password;
   }
@@ -65,26 +64,67 @@ class User {
   ************************************/
 
   public function createUser() {
-
-    // Open database connection
+    // Open database connection *****************
     $db   = init_db();
-
-    // Check if email already exist
-    $req  = $db->prepare( "SELECT * FROM user WHERE email = ?" );
+	$this->setEmail($_POST['email']);
+	// Check if password = confirm password *********
+	$this->setpassword($_POST['password'],$_POST['password_confirm']);
+    // Check if email already exist ******************
+    $req  = $db->prepare( "SELECT * FROM user WHERE email = '".$_POST['email']."'" );
     $req->execute( array( $this->getEmail() ) );
-
-    if( $req->rowCount() > 0 ) throw new Exception( "Email ou mot de passe incorrect" );
-
-    // Insert new user
-    $req->closeCursor();
-
-    $req  = $db->prepare( "INSERT INTO user ( email, password ) VALUES ( :email, :password )" );
-    $req->execute( array(
-      'email'     => $this->getEmail(),
-      'password'  => $this->getPassword()
-    ));
-
-    // Close databse connection
+	$user = $req->fetch();
+	$count = $req->rowCount();
+	if( $count == 0 ) 
+		{	
+			// Insert new user
+			$req->closeCursor();
+			$req  = $db->prepare( "INSERT INTO user ( email, password ) VALUES ( '".$_POST['email']."','".$_POST['password']."')" );
+			$req->execute( array(
+			'email'     => $this->getEmail(),
+			'password'  => $this->getPassword()
+			));
+			 echo "<br><br>&nbsp;&nbsp;&nbsp;&nbsp;Bravo <b>".$this->getEmail()."</b> votre compte est crée ! <br>";
+			 echo "<b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Veuillez-vous connecter ! <b>";
+			 require('view/auth/loginView.php');
+			 
+			 // ************** Generate random key
+			$cle = md5(microtime(TRUE)*100000);
+  
+			// Insert key in DB (user table)
+			$stmt = $db->prepare("UPDATE user SET cle=:cle WHERE email = :email");
+			$stmt->bindParam(':cle', $cle);
+			$stmt->bindParam(':email', $_POST['email']);
+			$stmt->execute();
+			 
+			// setup email with activation link
+			$email = $_POST['email'];
+			$email = "jeremy.gautier@edu.itescia.fr";
+			$destinataire = $email;
+			$sujet = "Activer votre compte" ;
+			$entete = "From: inscription@codflix.com" ;
+			 
+			// Activation link  + login: email and key
+			$message = 'Bienvenue sur VotreSite,
+			 
+			Pour activer votre compte, veuillez cliquer sur le lien ci-dessous
+			ou copier/coller dans votre navigateur Internet.
+			 
+			http://votresite.com/activation.php?log='.urlencode($email).'&cle='.urlencode($cle).'
+			 
+			 
+			---------------
+			Ceci est un mail automatique, Merci de ne pas y répondre.';
+			 
+			 $email = $_POST['email'];
+			mail($destinataire, $sujet, $message, $entete) ; // Envoi du mail
+		}
+	else
+		{
+			$user = $req->fetch();
+			echo "<br><br>   Erreur cet email:<b>".$this->getEmail()."</b> existe deja ! " ;
+			require('view/auth/signupView.php');
+		}
+    // Close database connection
     $db = null;
 
   }

@@ -20,5 +20,15 @@ function signupPage() {
 }
 
 /***************************
-* ----- SIGNUP FUNCTION -----
+* ----- Create user FUNCTION -----
 ***************************/
+function newuser() {
+  $user     = new stdClass();
+  $User = new user;
+  $User->createUser(); 
+  //	$_POST['email']; $_POST['password']; $_POST['password_confirm'];
+  $user->id = isset( $_SESSION['user_id'] ) ? $_SESSION['user_id'] : false;
+
+
+
+}

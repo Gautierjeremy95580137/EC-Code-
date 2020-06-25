@@ -8,28 +8,39 @@ require_once( 'controller/mediaController.php' );
 /**************************
 * ----- HANDLE ACTION -----
 ***************************/
+if ( isset( $_GET['media'] ) ):
+	mediadetailPage($_GET['media']);
+endif;
 
 if ( isset( $_GET['action'] ) ):
 
   switch( $_GET['action']):
 
     case 'login':
-
+		
       if ( !empty( $_POST ) ) login( $_POST );
       else loginPage();
 
     break;
 
     case 'signup':
-
       signupPage();
+    break;
 
+    case 'contact':
+      contact();
+    break;
+
+    case 'profil':
+	   profil();
+    break;
+	
+	case 'inscription':
+	   newuser();
     break;
 
     case 'logout':
-
       logout();
-
     break;
 
   endswitch;

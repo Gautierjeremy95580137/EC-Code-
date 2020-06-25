@@ -20,3 +20,11 @@ function homePage() {
   endif;
 
 }
+
+
+function contact() {
+
+    require('view/contact.php');
+
+
+}

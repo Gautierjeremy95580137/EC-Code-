@@ -9,3 +9,6 @@
 1. Follow the address of your repo. For example, if your repo is in ``www/codflix/``, the URL should be http://localhost/codflix or http://127.0.0.1/codflix
 
 Nothing else is required. You can now start your development
+
+
+-If you want to connect with a new user, you must modify in the database - user - the value of validation = 1.
